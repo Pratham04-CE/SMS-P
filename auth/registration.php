@@ -1,59 +1,23 @@
-<?php 
-require_once '../includes/role_session.php';
-start_role_session('student');
-include('../config/db_connect.php'); 
+<?php
+require_once 'db_connect.php';
+require_once 'auth/register_mail_logic.php';
 
-mysqli_report(MYSQLI_REPORT_OFF);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $otp = rand(100000, 999999);
 
-// Math Captcha Verification Logic
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['captcha_answer'])) {
-    $num1 = rand(1, 20); $num2 = rand(1, 20);
-    $_SESSION['captcha_answer'] = $num1 + $num2;
-    $_SESSION['captcha_text'] = "$num1 + $num2 = ?";
-}
-
-if(isset($_POST['register'])) {
-    $captcha_input = $_POST['captcha'];
-    if($captcha_input != $_SESSION['captcha_answer']) {
-        echo "<script>alert('Wrong Calculation!');</script>";
-    } else {
-        $enrollment = mysqli_real_escape_string($conn, $_POST['enrollment']);
-        $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $name = mysqli_real_escape_string($conn, $_POST['name']);
-        $otp = rand(100000, 999999);
-
-        try {
-            // Duplicate Check
-            $check_user = mysqli_query($conn, "SELECT * FROM users WHERE enrollment_or_id = '$enrollment' OR email = '$email'");
-
-            if($check_user !== false && mysqli_num_rows($check_user) > 0) {
-                echo "<script>alert('Error: Enrollment or Email already exists!');</script>";
-            } else {
-                $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                $img_data = addslashes(file_get_contents($_FILES['profile_pic']['tmp_name']));
-
-                $sql = "INSERT INTO users (enrollment_or_id, name, dob, email, phone_no, address, password, role, dept_id, semester, profile_pic, verification_code) 
-                        VALUES ('$enrollment', '$name', '{$_POST['dob']}', '$email', '{$_POST['phone']}', '{$_POST['address']}', '$pass', 'student', '{$_POST['dept']}', '{$_POST['sem']}', '$img_data', '$otp')";
-
-                if(mysqli_query($conn, $sql)) {
-                    include('register_mail_logic.php'); 
-                    if(sendVerificationMail($email, $name, $otp)) {
-                        $_SESSION['temp_email'] = $email;
-                        echo "<script>alert('OTP sent to your mail!'); window.location='register_verify_otp.php';</script>";
-                    } else {
-                        echo "<script>alert('Mail sending failed!');</script>";
-                    }
-                } else {
-                    echo "<script>alert('Registration failed due to database error.');</script>";
-                }
-            }
-        } catch (Throwable $e) {
-            echo "<script>alert('Registration failed due to database error.');</script>";
-        }
-    }
-}
+    // 1. Database mein insert karein
+   try {
+    $stmt = $conn->prepare("INSERT INTO users (name, email, otp) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $email, $otp);
+    $stmt->execute();
+    echo "Registration successful!";
+} catch (Exception $e) {
+    // Ye line aapko batayegi ki table missing hai ya column
+    echo "Database Query Error: " . $e->getMessage();
+}}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
