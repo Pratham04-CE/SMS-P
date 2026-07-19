@@ -1,19 +1,13 @@
 <?php
-// Debugging ON
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', '1');
+echo "Script started...";
 
-$host = "bexfkwadpmmxuduevla3-mysql.services.clever-cloud.com";
-$user = "u4t59ngvwo6ye93r";
-$pass = "Im9MZghH3EFepvQtVW8h";
-$dbname = "bexfkwadpmmxuduevla3";
-$port = 3306;
-
-$conn = mysqli_connect($host, $user, $pass, $dbname, $port);
+$conn = mysqli_connect("bexfkwadpmmxuduevla3-mysql.services.clever-cloud.com", "u4t59ngvwo6ye93r", "Im9MZghH3EFepvQtVW8h", "bexfkwadpmmxuduevla3", 3306);
 
 if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+    echo "<br>Connection failed: " . mysqli_connect_error();
 } else {
-    echo "Database Connected Successfully!";
+    echo "<br>Connected successfully!";
 }
 ?>
