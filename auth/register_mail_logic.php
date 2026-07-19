@@ -1,30 +1,34 @@
 <?php
-// auth/register_mail_logic.php
-require __DIR__ . '/../vendor/PHPMailer/Exception.php';
-require __DIR__ . '/../vendor/PHPMailer/PHPMailer.php';
-require __DIR__ . '/../vendor/PHPMailer/SMTP.php';
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// register_mail_logic.php
 
+// Function ko yahan define karein ya include kar lein
+function sendRegistrationMail($email, $name, $otp) {
+    $apiKey = getenv('BREVO_API_KEY');
+    $url = 'https://api.brevo.com/v3/smtp/email';
 
-function sendVerificationMail($email, $name, $otp) {
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'studentmanagementsystem04@gmail.com'; // Your Email
-        $mail->Password = 'ljiawcqbthqwyuzp';              // Your App Password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+    $data = [
+        'sender' => ['name' => 'SMS Portal', 'email' => 'studentmanagementsystem04@gmail.com'],
+        'to' => [['email' => $email, 'name' => $name]],
+        'subject' => 'Verify your Account',
+        'htmlContent' => "<h3>Welcome $name,</h3><p>Your verification code is: <b>$otp</b></p>"
+    ];
 
-        $mail->setFrom('studentmanagementsystem04@gmail.com', 'SMS Portal');
-        $mail->addAddress($email);
-        $mail->isHTML(true);
-        $mail->Subject = 'Verify Your Student Account';
-        $mail->Body    = "<h3>Hello $name,</h3><p>Your OTP for account activation is: <b>$otp</b></p>";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'api-key: ' . $apiKey
+    ]);
 
-        return $mail->send();
-    } catch (Exception $e) { return false; }
+    curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return ($httpCode === 201);
 }
+
+// Apne existing registration logic mein ise call karein:
+// if(sendRegistrationMail($user_email, $user_name, $otp)) { ... }
 ?>
