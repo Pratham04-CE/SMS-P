@@ -1,21 +1,21 @@
 <?php
 // Database configuration
 $host = "bexfkwadpmmxuduevla3-mysql.services.clever-cloud.com";
-$user = "u4t59ngvwo6ye93r";       
-$pass = "Im9MZghH3EFepvQtVW8h";           
-$dbname = "bexfkwadpmmxuduevla3"; 
-$port = 3306; 
+$user = "u4t59ngvwo6ye93r";
+$pass = "Im9MZghH3EFepvQtVW8h";
+$dbname = "bexfkwadpmmxuduevla3";
+$port = 3306;
 
-// Establish database connection
-$conn = mysqli_connect($host, $user, $pass, $dbname, $port);
+// Connection error report karne ke liye
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-// Verify database connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+try {
+    $conn = mysqli_connect($host, $user, $pass, $dbname, $port);
+} catch (mysqli_sql_exception $e) {
+    die("Database Connection Error: " . $e->getMessage());
 }
 
-@ini_set('session.gc_maxlifetime', 86400); 
-if (session_status() === PHP_SESSION_ACTIVE) {
-    setcookie(session_name(), session_id(), time() + 86400, '/');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 ?>
