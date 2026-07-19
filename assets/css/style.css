@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+* { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; outline: none; }
+
+body {
+    background: radial-gradient(circle at top left, #1e293b, #0f172a);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; padding: 20px;
+}
+
+.auth-container {
+    background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 35px; border-radius: 16px; width: 100%; max-width: 700px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    text-align: left; margin-bottom: 25px; font-size: 24px; font-weight: 700;
+    color: #f8fafc; border-left: 5px solid #38bdf8; padding-left: 15px;
+}
+
+.reg-form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.full-width { grid-column: span 2; }
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+label { color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+
+input, select, textarea {
+    width: 100%; padding: 10px 14px; background: #0f172a;
+    border: 1px solid #334155; border-radius: 8px; color: #f1f5f9; font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1); }
+
+/* Compact Captcha Section */
+.captcha-container {
+    background: rgba(15, 23, 42, 0.5); padding: 12px 18px;
+    border-radius: 10px; border: 1px solid #334155;
+    display: flex; align-items: center; justify-content: space-between;
+}
+
+.captcha-text {
+    font-family: 'Courier New', monospace; font-size: 20px;
+    font-weight: 700; color: #38bdf8; letter-spacing: 2px;
+}
+
+.captcha-input { width: 80px !important; text-align: center; font-weight: bold; }
+
+/* Custom File Upload Button */
+.file-upload-wrapper {
+    position: relative; overflow: hidden; display: inline-block; width: 100%;
+}
+
+.file-upload-btn {
+    border: 1px dashed #38bdf8; color: #38bdf8; background: rgba(56, 189, 248, 0.05);
+    padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; display: block;
+    font-size: 13px; font-weight: 600; transition: 0.3s;
+}
+
+.file-upload-btn:hover { background: rgba(56, 189, 248, 0.15); }
+
+input[type="file"] {
+    position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+
+/* Sleek Submit Button */
+.submit-btn {
+    padding: 14px; background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+    color: #fff; border: none; border-radius: 8px; font-size: 15px;
+    font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 5px;
+}
+
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px #38bdf8; }
+
+.auth-footer { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 13px; }
+.auth-footer a { color: #38bdf8; text-decoration: none; font-weight: 600; }
