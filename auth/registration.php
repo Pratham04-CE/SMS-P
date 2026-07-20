@@ -39,7 +39,8 @@ if(isset($_POST['register'])) {
                     include('register_mail_logic.php'); 
                     if(sendRegistrationMail($email, $name, $otp)) {
                         $_SESSION['temp_email'] = $email;
-                        echo "<script>alert('OTP sent to your mail!'); window.location='register_verify_otp.php';</script>";
+                        header("Location: register_verify_otp.php");
+                        exit();
                     } else {
                         echo "<script>alert('Mail sending failed!');</script>";
                     }
