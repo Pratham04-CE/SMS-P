@@ -1,6 +1,7 @@
 <?php
-session_start();
-include('../config/db_connect.php');
+require_once '../config/db_connect.php';
+require_once '../includes/role_session.php';
+start_role_session('student');
 
 if (!isset($_SESSION['temp_email'])) { header("Location: registration.php"); exit(); }
 
